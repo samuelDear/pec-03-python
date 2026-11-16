@@ -1,11 +1,13 @@
 
 from colorama import Style
+from app.gestor import GestorSistema
 
+gestor = GestorSistema()
 OPTIONS = [
     {
         "value": "1",
         "label": "Añadir vehiculos a la flota",
-        "action": lambda *args: True
+        "action": gestor.añadir_vehiculo
     },
     {
         "value": "2",
@@ -15,7 +17,7 @@ OPTIONS = [
     {
         "value": "3",
         "label": "Reservar vehiculo",
-        "action": lambda *args: True
+        "action": gestor.reservar_vehiculo
     },
     {
         "value": "4",
@@ -56,7 +58,7 @@ def validateOption(val: str) -> None:
         raise Exception(f"Valor {val} no es una opcion valida.")
     
     
-def runOptionAction(val: str, *args) -> bool:
+def runOptionAction(val: str, *args) -> bool | None:
     """
     Funcion para ejecutar la funcionalidad de la opcion ingresada
     Retorna:
