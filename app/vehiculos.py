@@ -28,6 +28,10 @@ class Coche(Vehiculo):
         super().__init__(matricula, marca, modelo)
         self.__n_puertas = n_puertas
         
+    @property
+    def n_puertas(self):
+        return self.__n_puertas
+        
     def __str__(self):
         return f"{type(self).__name__} {super().__str__()}, N. Puertas: {self.__n_puertas}"
     
@@ -37,7 +41,11 @@ class Moto(Vehiculo):
     def __init__(self, matricula: str, marca: str, modelo: str, cc: int):
         super().__init__(matricula, marca, modelo)
         self.__cc = cc
-            
+    
+    @property
+    def cc(self):
+        return self.__cc
+        
     def __str__(self):
         return f"{type(self).__name__} {super().__str__()}, CC: {self.__cc}"
 
