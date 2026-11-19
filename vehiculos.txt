@@ -1,3 +1,2 @@
 moto;123ABC;Honda;MotoGrande;300
 coche;ABC123;Toyota;Corolla;5
-coche;123;123;123;4
