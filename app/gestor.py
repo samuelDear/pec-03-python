@@ -8,11 +8,10 @@ from colorama import Fore, Style
 import logging
 logger = logging.getLogger(__name__)
 
-
 class GestorSistema:
     
     # Metodos
-    def __init__(self, vehiculos: list[Dict], reservas: list[Dict]):
+    def __init__(self, vehiculos: list[Coche | Moto], reservas: list[Dict]):
         self.__vehiculos = vehiculos
         self.__reservas = reservas
         
@@ -49,6 +48,19 @@ class GestorSistema:
                     if 1 < len(matricula) and len(matricula) > 10:
                         logger.error(f"La matricula debe tener entre 1 y 10 caracteres.")
                         print(f"{Fore.RED}[ERROR]: La matricula debe tener entre 1 y 10 caracteres.")
+                        continue
+                        
+                    # Validamos si ya existe la matricula...
+                    matriculaExist = False
+                    for vehiculo in self.__vehiculos:
+                        if vehiculo.matricula == matricula.upper():
+                            matriculaExist = True
+                            
+                    # Si existe damos error
+                    if matriculaExist:
+                        logger.error(f"La matricula {matricula.upper()} ya se encuentra registrada")
+                        print(f"{Fore.RED}[ERROR]: La matricula {matricula.upper()} ya se encuentra registrada")
+                        continue
                     
                     break
                 
@@ -70,13 +82,7 @@ class GestorSistema:
                     guardar_vehiculo_txt(
                         f"moto;{flotaMoto.matricula};{flotaMoto.marca};{flotaMoto.modelo};{flotaMoto.cc}",
                     )
-                    self.__vehiculos.append({
-                        "type": 'moto',
-                        "matricula": flotaMoto.matricula,
-                        "marca": flotaMoto.marca,
-                        "modelo": flotaMoto.modelo,
-                        "cc": flotaMoto.cc
-                    })
+                    self.__vehiculos.append(flotaMoto)
                 if typeCar.lower() == 'coche':
                     npuertas = notAllowEmptyVal(
                         label = "> Ingrese el numero de puertas del coche: ",
@@ -86,13 +92,7 @@ class GestorSistema:
                     guardar_vehiculo_txt(
                         f"coche;{flotaCoche.matricula};{flotaCoche.marca};{flotaCoche.modelo};{flotaCoche.n_puertas}",
                     )
-                    self.__vehiculos.append({
-                        "type": 'coche',
-                        "matricula": flotaCoche.matricula,
-                        "marca": flotaCoche.marca,
-                        "modelo": flotaCoche.modelo,
-                        "npuertas": flotaCoche.n_puertas
-                    })
+                    self.__vehiculos.append(flotaCoche)
                 
                 print()
                 
@@ -101,7 +101,7 @@ class GestorSistema:
                 logger.error(f"añadir_vehiculo: {e}")
                 print(f"{Fore.RED}[ERROR]: {e}\n")
     
-    def print_flota(self) -> list[Dict]:
+    def print_flota(self) -> list[Coche | Moto]:
         """
         Funcion para mostrar la flota guardada
         retorna:
@@ -125,8 +125,9 @@ class GestorSistema:
         tableSeparator()
         # Ahora pintamos la flota completa
         for row in rows:
-            typeCar = row.get('type')
-            print(f"{' ' * 2}{typeCar.capitalize()}, {Style.BRIGHT}{row.get('matricula')}{Style.NORMAL}, {row.get('marca')}, {row.get('modelo')}, {f"{row.get('npuertas')} Puertas" if typeCar == 'coche' else f"{row.get('cc')} CC"}")
+            #print(row)
+            typeCar = type(row).__name__.lower()
+            print(f"{' ' * 2}{typeCar.capitalize()}, {Style.BRIGHT}{row.matricula}{Style.NORMAL}, {row.marca}, {row.modelo}, {f"{row.n_puertas} Puertas" if typeCar == 'coche' else f"{row.cc} CC"}")
             tableSeparator()
         
         print()
@@ -161,7 +162,7 @@ class GestorSistema:
                 vehiculoExist = False
                 for vehiculo in flota:
                     # Validamos cada matricula a ver si existe
-                    if vehiculo['matricula'] == matricula:
+                    if vehiculo.matricula == matricula:
                         vehiculoExist = True
                         # Si entro aqui cancelamos el bucle para no dar vueltas
                         break
@@ -173,8 +174,8 @@ class GestorSistema:
                 # Pedimos la fecha de la reserva
                 while True:
                     try:
-                        fecha_reserva = input("> Ingrese la fecha de reserva (dd/mm/yyyy): ")
-                        dateReserve = datetime.strptime(fecha_reserva, '%d/%m/%Y').date()
+                        fecha_reserva = input("> Ingrese la fecha de reserva (yyyy-mm-dd): ")
+                        dateReserve = datetime.strptime(fecha_reserva, '%Y-%m-%d').date()
                         
                         #print(dateReserve.date())
                         break

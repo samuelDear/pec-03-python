@@ -1,8 +1,9 @@
 from typing import Any
+from app.vehiculos import Moto, Coche
 import logging
 logger = logging.getLogger(__name__)
 
-def getFlotaRows() -> list[Any]:
+def getFlotaRows() -> list[Coche | Moto]:
     """
     Funcion para obtener la flota como un Array de Dicts
     """
@@ -24,16 +25,13 @@ def getFlotaRows() -> list[Any]:
             # hacemos el dict del coche
             rowTmp = {
                 "type": rowSep[0],
-                "matricula": rowSep[1],
-                "marca": rowSep[2],
-                "modelo": rowSep[3]
             }
                     
             # Validamos que dato es diferente
             if rowSep[0] == 'coche':
-                rowTmp["npuertas"] = rowSep[4]
+                rowTmp = Coche(rowSep[1], rowSep[2], rowSep[3], rowSep[4])
             elif rowSep[0] == 'moto':
-                rowTmp["cc"] = rowSep[4]
+                rowTmp = Moto(rowSep[1], rowSep[2], rowSep[3], rowSep[4])
 
             rows.append(rowTmp)
     
