@@ -1,5 +1,6 @@
 from app.vehiculos import Moto, Coche
 from app.utils import notAllowEmptyVal, tableSeparator
+from app.persistencia import guardar_vehiculo_txt, guardar_reserva_txt
 
 from datetime import datetime
 from typing import Any, Dict
@@ -66,7 +67,7 @@ class GestorSistema:
                         typeVar = 'int'
                     )
                     flotaMoto = Moto(matricula.upper(), marca, modelo, cc)
-                    self.guardar_vehiculo_txt(
+                    guardar_vehiculo_txt(
                         f"moto;{flotaMoto.matricula};{flotaMoto.marca};{flotaMoto.modelo};{flotaMoto.cc}",
                     )
                     self.__vehiculos.append({
@@ -82,7 +83,7 @@ class GestorSistema:
                         typeVar = 'int'
                     )
                     flotaCoche = Coche(matricula.upper(), marca, modelo, npuertas)
-                    self.guardar_vehiculo_txt(
+                    guardar_vehiculo_txt(
                         f"coche;{flotaCoche.matricula};{flotaCoche.marca};{flotaCoche.modelo};{flotaCoche.n_puertas}",
                     )
                     self.__vehiculos.append({
@@ -132,24 +133,6 @@ class GestorSistema:
         
         
         return rows
-                
-    def guardar_vehiculo_txt(self, vehiculo: str) -> None:
-        """
-        Funcion para guardar en el vehiculos.txt los vehiculos
-        """
-        # Estructura tipo;matricula;marca;modelo;npuertas|cc
-        with open('vehiculos.txt', 'a', encoding = 'utf-8') as flota:
-            flota.write(f"{vehiculo}\n")
-            logger.info(f"Se guardo un vehiculo({vehiculo})")
-    
-    def guardar_reserva_txt(self, reserva: str) -> None:
-        """
-        Funcion para guardar en reservas.txt
-        """
-        # Estructura fecha;matricula
-        with open('reservas.txt', 'a', encoding = 'utf-8') as reservas:
-            reservas.write(f"{reserva}\n")
-            logger.info(f"Se guardo la reserva({reserva})")
     
     def reservar_vehiculo(self) -> None:
         """
@@ -213,7 +196,7 @@ class GestorSistema:
                     raise Exception(f"La matricula {matricula} ya se encuentra reservada para la fecha {dateReserve}")
                 
                 # Si llevamos aqui, buscamos la reserva
-                self.guardar_reserva_txt(f"{dateReserve};{matricula}")
+                guardar_reserva_txt(f"{dateReserve};{matricula}")
                 
                 print(f"{Fore.BLUE}{Style.BRIGHT}\nReserva creada con exito\n")
                 self.__reservas.append({

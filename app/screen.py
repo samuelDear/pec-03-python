@@ -1,5 +1,6 @@
 from colorama import Fore, Style
 import os, logging
+from typing import Any
 
 from app.gestor import GestorSistema
 from app.menuoptions import menuOptions, runOptionAction, validateOption
@@ -82,7 +83,7 @@ def showMenu(gestor: GestorSistema) -> None:
         # Le damos la opcion de continuar...
         input(f"\n{Style.DIM}Presione enter para continuar....")
         
-def inputOption(gestor: GestorSistema) -> str:
+def inputOption(options: list[Any]) -> str:
     """
     Funcion para capturar la opcion ingresada por el usuario,
     aca se valida que sea un valor valido
@@ -96,7 +97,7 @@ def inputOption(gestor: GestorSistema) -> str:
             option = input(f"> Ingrese una opcion: ")
             
             # Validamos que sea una opcion correcta
-            validateOption(option, gestor)
+            validateOption(option, options)
             break
         except Exception as e:
             logger.error(e)

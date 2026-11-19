@@ -1,6 +1,6 @@
 from colorama import init, just_fix_windows_console
 from app.screen import showMenu
-from app.utils import getReservasRows, getFlotaRows
+from app.persistencia import getReservasRows, getFlotaRows
 from app.gestor import GestorSistema
 import logging
 
