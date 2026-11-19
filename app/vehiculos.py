@@ -50,6 +50,9 @@ class Moto(Vehiculo):
         return f"{type(self).__name__} {super().__str__()}, CC: {self.__cc}"
 
 if __name__ == "__main__":
+    """
+    Pruebas de inicializacion de clases
+    """
     # Prueba coche
     coche1 = Coche("9234HDJ", "Honda", "Civic", 5)
     
